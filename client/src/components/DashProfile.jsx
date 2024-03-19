@@ -1,6 +1,5 @@
 import { Alert, Button, Modal, ModalBody, TextInput } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   getDownloadURL,
@@ -22,9 +21,10 @@ import {
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 export default function DashProfile() {
-  const { currentUser, error ,loading} = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -148,25 +148,22 @@ export default function DashProfile() {
       dispatch(deleteUserFailure(error.message));
     }
   };
-  const handleSignout = async () =>{
+
+  const handleSignout = async () => {
     try {
-      const res = await fetch('/api/user/signout',{
-        method: 'POST'
-
-      })
-      const data = await res.json()
-      if(!res.ok){
-        console.log(data.message)
-      }else{
-        dispatch(signoutSuccess())
-
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
       }
-      
     } catch (error) {
-      console.log(error.message)
-      
+      console.log(error.message);
     }
-  }
+  };
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
@@ -236,22 +233,33 @@ export default function DashProfile() {
           placeholder='password'
           onChange={handleChange}
         />
-        <Button type='submit'disabled={loading ||  imageFileUploading} gradientDuoTone='purpleToBlue' outline>
-
+        <Button
+          type='submit'
+          gradientDuoTone='purpleToBlue'
+          outline
+          disabled={loading || imageFileUploading}
+        >
           {loading ? 'Loading...' : 'Update'}
         </Button>
-        { currentUser.isAdmin &&(
-          <Link to={'create-post'}> <Button type ='button' gradientDuoTone='purpleToPink' 
-          className='w-full'> Create a post</Button>
+        {currentUser.isAdmin && (
+          <Link to={'/create-post'}>
+            <Button
+              type='button'
+              gradientDuoTone='purpleToPink'
+              className='w-full'
+            >
+              Create a post
+            </Button>
           </Link>
-         
         )}
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
           Delete Account
         </span>
-        <span onClick={handleSignout} className='cursor-pointer'>Sign Out</span>
+        <span onClick={handleSignout} className='cursor-pointer'>
+          Sign Out
+        </span>
       </div>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
